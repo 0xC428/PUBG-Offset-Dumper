@@ -234,7 +234,7 @@ int main()
 	printf("constexpr uint64_t LastSubmitTime = 0x%01X;\n", offsets->LastSubmitTime);
 
 	auto lrt = memory->FindPattern(dump, imagesize, "0F 2F 83 ? ? ? ? 41 0F 43 CE 83 E0 FB 0B C8 48 8B 03");
-	offsets->LastRenderTimeOnScreen = *(unsigned int*)(dump + lrt + 0x3);
+	offsets->LastRenderTimeOnScreen = *(unsigned int*)(dump + lrt + 0x3) + 0x4;
 	printf("constexpr uint64_t LastRenderTimeOnScreen = 0x%01X;\n", offsets->LastRenderTimeOnScreen);
 
 	auto acp = memory->FindPattern(dump, imagesize, "83 8F ? ? ? ? ? 48 8B 5C 24 ? 48 8B 74 24 ? 48 83 C4 20 5F C3");

@@ -31,10 +31,13 @@ public:
 	uint64_t StaticMesh;
 	uint64_t ComponentToWorld;
 	uint64_t ComponentLocation;
+	uint64_t ComponentVelocity;
 
 	uint64_t LastTeamNum;
 	uint64_t CharacterName;
 	uint64_t SpectatedCount;
+	uint64_t PlayerState;
+	uint64_t PlayerName;
 
 	uint64_t WeaponProcessor;
 	uint64_t EquippedWeapons ;

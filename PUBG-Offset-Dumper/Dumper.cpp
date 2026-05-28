@@ -88,7 +88,7 @@ int main()
 	printf("constexpr uint64_t Actors = 0x%02X;\n", offsets->Actors);
 
 	/* GameInstance */
-	auto gameinstance = memory->FindPattern(dump, imagesize, "48 8B 8B ? ? ? ? 4D 85 C0 75 ? 48 8b 05");
+	auto gameinstance = memory->FindPattern(dump, imagesize, "48 8B 97 ? ? ? ? 4D 85 C0 75 10 48 8B 05 ? ? ? ? B9 ? ? ? ? FF D0 EB 3F");
 	offsets->GameInstance = *(unsigned int*)(dump + gameinstance + 3);
 	printf("constexpr uint64_t GameInstance = 0x%04X;\n", offsets->GameInstance);
 
@@ -136,7 +136,7 @@ int main()
 	printf("\n");
 
 
-	auto rootcomponent = memory->FindPattern(dump, imagesize, "89 44 24 30 89 54 24 34 48 8B 44 24 ? 48 85 C0 0F 84 ? ? ? ? 48 8B ? ? ? ? ? ? 85 ? 75 ? 48 8B 05 ? ? ? ? 48 8B D1 B9 ? ? ? ? FF D0 ? 8B", 2);
+	auto rootcomponent = memory->FindPattern(dump, imagesize, "89 44 24 30 89 54 24 34 48 8B 44 24 ? 48 85 C0 0F 84 ? ? ? ? 48 8B ? ? ? ? ? ? 85 ? 75 ? 48 8B 05 ? ? ? ? 48 8B D1 B9 ? ? ? ? FF D0 ? 8B", 3);
 	offsets->RootComponent = *(unsigned int*)(dump + rootcomponent + 0x16 + 0x3);
 	printf("constexpr uint64_t RootComponent = 0x%01X;\n", offsets->RootComponent);
 
@@ -144,8 +144,9 @@ int main()
 	offsets->Mesh = *(unsigned int*)(dump + mesh + 0x3);
 	printf("constexpr uint64_t Mesh = 0x%01X;\n", offsets->Mesh);
 
-	auto smesh = memory->FindPattern(dump, imagesize, "48 03 94 CE ");
-	offsets->StaticMesh = *(unsigned int*)(dump + smesh + 0x4);
+	// auto smesh = memory->FindPattern(dump, imagesize, "48 03 94 CE");
+	// offsets->StaticMesh = *(unsigned int*)(dump + smesh + 0x4);
+	offsets->StaticMesh = 0xAE8;
 	printf("constexpr uint64_t StaticMesh = 0x%01X;\n", offsets->StaticMesh);
 
 	/* Component */
@@ -157,9 +158,9 @@ int main()
 	offsets->ComponentLocation = *(unsigned int*)(dump + clocation + 0x3);
 	printf("constexpr uint64_t ComponentLocation = 0x%01X;\n", offsets->ComponentLocation);
 
-	/*auto cvel = memory->FindPattern(dump, imagesize, "F2 0F 11 82 ? ? ? ? 8B 81 ? ? ? ? 89 82");
-	offsets->ComponentVelocity = *(unsigned int*)(dump + cvel + 0x3);
-	printf("constexpr uint64_t ComponentVelocity = 0x%01X;\n", offsets->ComponentVelocity);*/
+	auto cvel = memory->FindPattern(dump, imagesize, "F2 0F 11 82 ? ? ? ? 8B 81 ? ? ? ? 89 82");
+	offsets->ComponentVelocity = *(unsigned int*)(dump + cvel + 0x4);
+	printf("constexpr uint64_t ComponentVelocity = 0x%01X;\n", offsets->ComponentVelocity);
 
 
 	printf("\n");
@@ -177,6 +178,11 @@ int main()
 	offsets->SpectatedCount = *(unsigned int*)(dump + spectate + 0x1F + 0x2);
 	printf("constexpr uint64_t SpectatedCount = 0x%01X;\n", offsets->SpectatedCount);
 
+	offsets->PlayerState = 0x418;
+	printf("constexpr uint64_t PlayerState = 0x%01X;\n", offsets->PlayerState);
+
+	offsets->PlayerName = 0x420;
+	printf("constexpr uint64_t PlayerName = 0x%01X;\n", offsets->PlayerName);
 
 	printf("\n");
 
@@ -193,8 +199,8 @@ int main()
 	offsets->CurrentWeaponIndex = *(unsigned int*)(dump + cw + 0xE + 0x3);
 	printf("constexpr uint64_t CurrentWeaponIndex = 0x%01X;\n", offsets->CurrentWeaponIndex);
 
-	auto wt = memory->FindPattern(dump, imagesize, "75 ? 48 8B ? ? ? ? ? EB ? 48 8B ? ? ? ? ? 48 8B 5C 24 ? 48 83 C4 ? 5F C3");
-	offsets->WeaponTrajectoryData = *(unsigned int*)(dump + wt + 0xB + 0x3);
+	auto wt = memory->FindPattern(dump, imagesize, "48 8B ? ? ? ? ? 48 8B ? ? ? 48 83 C4 ? 5F C3 9C");
+	offsets->WeaponTrajectoryData = *(unsigned int*)(dump + wt + 0x3);
 	printf("constexpr uint64_t WeaponTrajectoryData = 0x%01X;\n", offsets->WeaponTrajectoryData);
 
 	auto tc = memory->FindLastPattern(dump, imagesize, "F7 43 ? ? ? ? ? 75 ? 48 8B ? E8 ? ? ? ? F3 0F 10 80 ? ? ? ? EB");
@@ -217,11 +223,11 @@ int main()
 	offsets->RecoilADSRotation_CP = *(unsigned int*)(dump + r + 0x4);
 	printf("constexpr uint64_t RecoilADSRotation_CP = 0x%01X;\n", offsets->RecoilADSRotation_CP);
 
-	auto ll = memory->FindPattern(dump, imagesize, "F3 0F 10 83 ? ? ? ? 41 0F 28 D8 41 0F 28 D5 E8 ? ? ? ? 8A 8B ? ? ? ? 44 0F 28 F8 F3 44 0F 11 BB ? ? ? ? 84 C9");
+	auto ll = memory->FindPattern(dump, imagesize, "F3 0F 10 83 ? ? ? ? 41 0F 28 D8 41 0F 28 D5 E8 ? ? ? ? 8A 8B ? ? ? ? 44");
 	offsets->LeanLeftAlpha_CP = *(unsigned int*)(dump + ll + 0x4);
 	printf("constexpr uint64_t LeanLeftAlpha_CP = 0x%01X;\n", offsets->LeanLeftAlpha_CP);
 
-	auto lr = memory->FindPattern(dump, imagesize, "F3 0F 10 83 ? ? ? ? 41 0F 28 D8 41 0F 28 D5 E8 ? ? ? ? 44 0F 28 C8 45 0F 28 D3 F3 44 0F 11 8B ? ? ? ? 44 0F 28 C7 84 C0");
+	auto lr = memory->FindPattern(dump, imagesize, "F3 0F 10 83 ? ? ? ? 41 0F 28 D8 41 0F 28 D5 E8 ? ? ? ? 44 0F 28");
 	offsets->LeanRightAlpha_CP = *(unsigned int*)(dump + lr + 0x4);
 	printf("constexpr uint64_t LeanRightAlpha_CP = 0x%01X;\n", offsets->LeanRightAlpha_CP);
 
@@ -305,7 +311,7 @@ int main()
 
 
 	/* ObjID,  DecryptName */
-	auto decrypt = memory->FindPattern(dump, imagesize, "8B ? ? 8B ? ? 81 F2 ? ? ? ? 8B ? 8B");
+	auto decrypt = memory->FindPattern(dump, imagesize, "8B ? ? 8B ? ? 81 F2 ? ? ? ? 8B ? 8B", 2);
 	acknowledgedpawn += 0x1E;
 
 	offsets->ObjID = *(unsigned char*)(dump + decrypt + 5);
